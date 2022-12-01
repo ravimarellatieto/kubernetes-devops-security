@@ -32,7 +32,7 @@ pipeline {
             }
           }
           }
-          sae('Vulnerability Scan - Dependency Check'){
+          stage('Vulnerability Scan - Dependency Check'){
             steps{
               sh "mvn dependency-check:check"
             }
