@@ -32,6 +32,16 @@ pipeline {
             }
           }
           }
+          sae('Vulnerability Scan - Dependency Check'){
+            steps{
+              sh "mvn dependency-check:check"
+            }
+            post{
+              always{
+                dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
+              }
+            }
+          }
       stage('Unit Tests - Jacoco') {
             steps {
               sh "mvn test"
