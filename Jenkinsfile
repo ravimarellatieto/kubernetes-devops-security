@@ -8,6 +8,15 @@ pipeline {
               archive 'target/*.jar' 
             }
         }
+
+        stage('SAST - Sonar Qube'){
+          steps{
+        sh    "mvn sonar:sonar \
+  -Dsonar.projectKey=numeric-application \
+  -Dsonar.host.url=http://devsecops.brazilsouth.cloudapp.azure.com:9000 \
+  -Dsonar.login=af3ce9c09c97caec95e51e3574e4dd9104dadaf8"
+          }
+        }
          stage('Unit Tests - Jacoco') {
             steps {
               sh "mvn test"
