@@ -47,7 +47,7 @@ pipeline {
           }
         
       }
-        }
+        
         stage('Vulnerability Scan - Dependency Check'){
             steps{
               sh "mvn dependency-check:check"
