@@ -8,7 +8,32 @@ pipeline {
               archive 'target/*.jar' 
             }
         }
-         stage('Unit Tests - Jacoco') {
+/*
+        stage('SAST - Sonar Qube'){
+          steps{
+        sh    "mvn sonar:sonar \
+  -Dsonar.projectKey=numeric-application \
+  -Dsonar.host.url=http://devsecops.brazilsouth.cloudapp.azure.com:9000 \
+  -Dsonar.login=af3ce9c09c97caec95e51e3574e4dd9104dadaf8"
+          }
+        }
+     */   
+     stage('SAST - Sonar Qube'){
+          steps{
+            withSonarQubeEnv('SonarQube'){
+               sh    "mvn sonar:sonar \
+  -Dsonar.projectKey=numeric-application \
+  -Dsonar.host.url=http://devsecops.brazilsouth.cloudapp.azure.com:9000 "
+            }
+            timeout(time:2, unit: 'MINUTES'){
+                script{
+                  waitForQualityGate abortPipeline: true
+                }
+            }
+          }
+          }
+          
+      stage('Unit Tests - Jacoco') {
             steps {
               sh "mvn test"
               
@@ -31,6 +56,16 @@ pipeline {
         }
       }
         }
+        stage('Vulnerability Scan - Dependency Check'){
+            steps{
+              sh "mvn dependency-check:check"
+            }
+            post{
+              always{
+                dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
+              }
+            }
+          }
         stage('Docker Build and Push'){
           steps{
             withDockerRegistry([credentialsId: "docker-hub",url:""]){
