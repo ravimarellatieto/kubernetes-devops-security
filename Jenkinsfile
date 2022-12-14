@@ -12,7 +12,7 @@ pipeline {
       stage('Build Artifact') {
             steps {
               sh "mvn clean package -DskipTests=true"
-              archive 'target/*.jar' 
+              archive "target/*.jar"
             }
         }
 /*
@@ -109,14 +109,14 @@ pipeline {
             
           }
         }
-    
+      }
     post{
       always{
                 
         junit 'target/surefire-reports/*.xml'
-                jacoco execPattern: 'target/jacoco.exec'
-                pitmutation mutationStatsFile: '**/target/pit-reports/**/mutations.xml'
-                dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
+        jacoco execPattern: 'target/jacoco.exec'
+        pitmutation mutationStatsFile: '**/target/pit-reports/**/mutations.xml'
+        dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
       }
     }
 }
