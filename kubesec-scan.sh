@@ -4,7 +4,7 @@
 
 # using kubesec V2 api
 
-$ kubesec ()
+kubesec ()
 {
     local FILE="${1:-}";
     [[ ! -e "${FILE}" ]] && {
