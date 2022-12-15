@@ -18,8 +18,8 @@ kubesec ()
       --data-binary=@"${FILE}" \
       https://v2.kubesec.io/scan
 }
-scan_result=kubesec "./k8s_deployment_service.yaml"
-scan_result=kubesec @"k8s_deployment_service.yaml"  | jq .[0].message -r
+scan_result=kubesec $k8s_deployment_service.yaml
+scan_result=kubesec $./k8s_deployment_service.yaml  | jq .[0].message -r
 scan_score=kubesec "@k8s_deployment_service.yaml" | jq .[0].score 
 # using kubesec docker image for scanning
 # scan_result=$(docker run -i kubesec/kubesec:512c5e0 scan /dev/stdin < k8s_deployment_service.yaml)
