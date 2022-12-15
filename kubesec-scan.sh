@@ -2,28 +2,12 @@
 
 #kubesec-scan.sh
 
-# using kubesec V2 api
+# using kubesec v2 api
+scan_result=$(curl -sSX POST --data-binary @"k8s_deployment_service.yaml" https://v2.kubesec.io/scan)
+scan_message=$(curl -sSX POST --data-binary @"k8s_deployment_service.yaml" https://v2.kubesec.io/scan | jq .[0].message -r ) 
+scan_score=$(curl -sSX POST --data-binary @"k8s_deployment_service.yaml" https://v2.kubesec.io/scan | jq .[0].score ) 
 
-kubesec ()
-{
-    local FILE="${1:-}";
-    echo  FILE;
-    [[ ! -e "${FILE}" ]] && {
-        echo "kubesec: ${FILE}: No such file" >&2;
-        return 1
-    };
-    
-    curl --silent \
-      --compressed \
-      --connect-timeout 5 \
-      -sSX POST \
-      --data-binary=@"${FILE}" \
-      https://v2.kubesec.io/scan
-}
-scan_result=kubesec "k8s_deployment_service.yaml"
-scan_result=kubesec "./k8s_deployment_service.yaml"  | jq .[0].message -r
-scan_score=kubesec k8s_deployment_service.yaml | jq .[0].score 
-scan_score=kubesec ./k8s_deployment_service.yaml | jq .[0].score 
+
 # using kubesec docker image for scanning
 # scan_result=$(docker run -i kubesec/kubesec:512c5e0 scan /dev/stdin < k8s_deployment_service.yaml)
 # scan_message=$(docker run -i kubesec/kubesec:512c5e0 scan /dev/stdin < k8s_deployment_service.yaml | jq .[].message -r)
