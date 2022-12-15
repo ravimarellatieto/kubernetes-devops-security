@@ -7,11 +7,12 @@
 kubesec ()
 {
     local FILE="${1:-}";
+    echo  FILE;
     [[ ! -e "${FILE}" ]] && {
         echo "kubesec: ${FILE}: No such file" >&2;
         return 1
     };
-    console.log("FILE:",FILE);
+    
     curl --silent \
       --compressed \
       --connect-timeout 5 \
